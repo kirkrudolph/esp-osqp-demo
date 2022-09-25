@@ -11,12 +11,10 @@ Still work to do here. They don't have a good example for embedded. Also, defaul
 or
 
 ```
-cd osqp
-rm -dr build
-cmake -S src -B build
-cd build
-make
-./out/osqp_demo
+rm -dr osqp/build
+cmake -S osqp -B osqp/build
+make -C osqp/build
+./osqp/build/out/osqp_demo
 ```
 
 ## Embedded
