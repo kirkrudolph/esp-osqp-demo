@@ -1,8 +1,3 @@
-# For more information about build system see
-# https://docs.espressif.com/projects/esp-idf/en/latest/api-guides/build-system.html
-# The following five lines of boilerplate have to be in your project's
-# CMakeLists in this exact order for cmake to work correctly
-
 # Minimum version required
 cmake_minimum_required(VERSION 3.5)
 
@@ -11,15 +6,12 @@ include($ENV{IDF_PATH}/tools/cmake/project.cmake)
 project(esp-osqp CXX C)
 
 # Project name
-message("Top level CMakeLists.txt")
+message("*** Top level CMakeLists.txt ***")
 
-# Some standard CMake modules
 # See https://cmake.org/cmake/help/latest/manual/cmake-modules.7.html
 include(ProcessorCount)
 ProcessorCount(N)
 message("Number of processors (on current machine): ${N}")
-
-# Some non-standard CMake modules
 
 # Include osqp (see https://docs.espressif.com/projects/esp-idf/en/latest/esp32/api-guides/build-system.html#using-third-party-cmake-projects-with-components)
 # ------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -29,8 +21,3 @@ set(PYTHON 0)
 option(BUILD_SHARED_LIBS OFF)
 option(BUILD_TESTING OFF)
 add_subdirectory(osqp)
-
-
-# Publicly link `osqp` to `main` component
-#target_link_libraries(main PUBLIC osqp)
-#target_link_libraries(${COMPONENT_LIB} PUBLIC osqp)

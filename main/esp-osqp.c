@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "osqp.h"
+#include "cs.h"
 
 int test(void) {
   // Load problem data
@@ -29,9 +30,9 @@ int test(void) {
   if (data) {
     data->n = n;
     data->m = m;
-    //data->P = csc_matrix(data->n, data->n, P_nnz, P_x, P_i, P_p);
+//    data->P = csc_matrix(data->n, data->n, P_nnz, P_x, P_i, P_p);
     data->q = q;
-    //data->A = csc_matrix(data->m, data->n, A_nnz, A_x, A_i, A_p);
+//    data->A = csc_matrix(data->m, data->n, A_nnz, A_x, A_i, A_p);
     data->l = l;
     data->u = u;
   }
@@ -39,13 +40,13 @@ int test(void) {
   // Define solver settings as default
   if (settings) osqp_set_default_settings(settings);
 
-  // Setup workspace
+  // Setup workspace (only non-embedded)
   //exitflag = osqp_setup(&work, data, settings);
 
   // Solve Problem
   osqp_solve(work);
 
-  // Clean workspace
+  // Clean workspace (only non-embedded)
   //osqp_cleanup(work);
   if (data) {
     if (data->A) free(data->A);
@@ -60,5 +61,6 @@ int test(void) {
 void app_main(void)
 {
     printf("esp-osqp demo\n");
-    test();
+    int exitflag = test();
+    printf("Exit Flag: %d", exitflag);
 }
