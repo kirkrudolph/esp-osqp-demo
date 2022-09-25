@@ -4,9 +4,8 @@
 #include "workspace.h"
 #include "osqp.h"
 
-void app_main(void)
-{
-    
+int main(int argc, char **argv) {
+
     // Solve Problem
     osqp_solve(&workspace);
 
@@ -17,5 +16,5 @@ void app_main(void)
     printf("Primal residual:       %.4e\n", (&workspace)->info->pri_res);
     printf("Dual residual:         %.4e\n", (&workspace)->info->dua_res);
 
-
+    return 0;
 }

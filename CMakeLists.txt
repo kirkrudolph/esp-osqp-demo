@@ -13,10 +13,3 @@ include(ProcessorCount)
 ProcessorCount(N)
 message("-- Number of processors (on current machine): ${N}")
 
-# Set values of variables that control the build of `osqp`
-message("*** OSQP Configure ***")
-set(EMBEDDED 2)
-set(PYTHON 0)
-option(BUILD_SHARED_LIBS OFF)
-option(BUILD_TESTING OFF)
-add_subdirectory(osqp)
