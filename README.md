@@ -1,25 +1,21 @@
 # ESP OSQP
-Still work to do here. They don't have a good example for embedded. Still can't compile esp32 example.
+Still work to do here. They don't have a good example for embedded. Also, default build in OSQP dependancies creates a shared lib and example executable which has to be changed manually.
 
-REMEMBER TO CLONE RECURSIVE `git clone --recurse-submodules <repo>`
+1. Clone: `git clone --recurse-submodules <repo>`
+2. Remove lines `132-148` from `osqp/lin_sys/direct/qdldl/qdldl_sources/CMakeLists.txt`
+3. `idf.py build`
 
-## OSQP Example (on Mac)
-[Build From Source](https://osqp.org/docs/get_started/sources.html)
+## Building OSQP Example (on Mac)
+[Build From Source](https://osqp.org/docs/get_started/sources.html#build-the-binaries)
 
-Following code generates build files and `osqp/include/osqp_configure.h`
-- need to add `set(EMBEDDED 2)` in CMakeLists.txt to enable `#define EMBEDDED`
+or
 
 ```
 cd osqp
-mkdir build
+rm -dr build
+cmake -S src -B build
 cd build
-cmake -G "Unix Makefiles" ..
-```
-
-Following code builds native libraries and runs demo executable:
-
-```
-cmake --build .
+make
 ./out/osqp_demo
 ```
 
@@ -41,6 +37,9 @@ cmake --build .
 Therefore, default example doesn't work on embedded. Need to write custom code for `setup` and `cleanup` then make call to `osqp_solve`.
 
 ## Troubleshooting ([Issue submitted](https://github.com/osqp/osqp/issues/422))
+### [fix](https://osqp.discourse.group/t/cross-compiling-osqp-for-arm-stm32f405/221/2):  
+
+
 Trying to use `idf.py build` (with or without `set(EMBEDDED 2)`) results in:
 
 ```
