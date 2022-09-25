@@ -1,5 +1,6 @@
 {
     "files.associations": {
         "qdldl_interface.h": "c"
-    }
+    },
+    "idf.adapterTargetName": "esp32"
 }
