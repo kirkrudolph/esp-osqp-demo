@@ -21,10 +21,10 @@ After measuring performance, it's much worse than I was hoping. The statistics a
 - O2 Compiler Optimization
 - Percision [(FLOAT and LONG)](https://osqp.org/docs/codegen/python.html#codegen) didn't change the generated code.
 
-| CPU Freq (MHz) | States # | Actuators # | Constraints # | Prediction / Control Horizon | Time / solve (ms) |
-|:--------------:|:--------:|:-----------:|:-------------:|:----------------------------:|:-----------------:|
-|       160      |    12    |      4      |      32       |         10 / 10              |        235        |
-|       240      |    12    |      4      |      32       |         10 / 10              |        156        |
+| CPU Freq (MHz) | States / Actuators / Constraints (#) | Prediction / Control Horizon (#) | Time / solve (ms) |
+|:--------------:|:------------------------------------:|:--------------------------------:|:-----------------:|
+|       160      |             12 / 4 / 32              |             10 / 10              |        235        |
+|       240      |             12 / 4 / 32              |             10 / 10              |        156        |
 
 The required microcontroller resources are also significant (~174 kB Total):
 
