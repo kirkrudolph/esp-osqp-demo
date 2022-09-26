@@ -13,12 +13,12 @@ The image below shows the microcontroller's output from building this repository
 
 ![esp_output](image/esp32_output.png)
 
-After measuring performance, it's much worse than I was hoping. Averaging over 10 solves (almost no variability because initial state were always the same), the statistics are summarized in the following table:
+After measuring performance, it's much worse than I was hoping. Averaging over 10 solves (25 Iterations / solve) (almost no variability because initial state were always the same), the statistics are summarized in the following table:
 
-| CPU Freq (MHz) | # States | # Actuators |  Precision  | Horizon | Time / solve (ms) |
-|:--------------:|:--------:|:-----------:|:-----------:|:-------:|:-----------------:|
-|       160      |    12    |      4      |   Double    |   10    |        235        |
-|       240      |    12    |      4      |   Double    |   10    |        156        |
+| CPU Freq (MHz) | # States | # Actuators | # Constraints | Precision | Prediction Horizon | Control Horizon | Time / solve (ms) |
+|:--------------:|:--------:|:-----------:|:-------------:|:---------:|:------------------:|:---------------:|:-----------------:|
+|       160      |    12    |      4      |      32       |   Double  |         10         |       10        |        235        |
+|       240      |    12    |      4      |      32       |   Double  |         10         |       10        |        156        |
 
 The required microcontroller resources are also significant (~174 kB Total):
 
