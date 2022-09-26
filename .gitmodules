@@ -1,3 +1,0 @@
-[submodule "osqp"]
-	path = osqp
-	url = https://github.com/osqp/osqp.git

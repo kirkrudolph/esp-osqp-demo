@@ -1,50 +1,50 @@
 # ESP OSQP
-Still work to do here. They don't have a good example for embedded. Also, default build in OSQP dependancies creates a shared lib and example executable which has to be changed manually.
+[OSQP](https://osqp.org/) is an open-source, efficient, and robust numerical optimization package for solving convex quadratic programs. 
 
-1. Clone: `git clone --recurse-submodules <repo>`
-2. Remove lines `132-148` from `osqp/lin_sys/direct/qdldl/qdldl_sources/CMakeLists.txt`
-3. `idf.py build`
+This repository is an example of how to implement OSQP on an embedded controller for model predictive control (MPC).
 
-## Building OSQP Example (on Mac)
-[Build From Source](https://osqp.org/docs/get_started/sources.html#build-the-binaries)
+## Workflow
+1. MPC problem is designed in a high level language (MATLAB or Python). For example, see [kirkrudolph/osqp-python](https://github.com/kirkrudolph/osqp-python) which uses an example from OSQP to simulate a 12 state model of a quadcopter. The python interface is capable of generating a solver in c code for the specific problem.
+2. Take the generated c code and compile for an embedded microcontroller. This repo uses an ESP32 microcontroller.
 
-or
+## OSQP Generated Code on Embedded Microcontroller
+
+The image below shows the microcontroller's output from building this repository and flashing it to an ESP32. I'd like to test generated code using `FLOAT` instead of `DOUBLE`.
+
+![esp_output](image/esp32_output.png)
+
+After measuring performance, it's much worse than I was hoping. The statistics are summarized in the following table:
+
+- Average over 10 solves
+  - 25 Iterations / solve
+  - Almost no variability b/c initial states were always the same.
+- O2 Compiler Optimization
+- Percision [(FLOAT and LONG)](https://osqp.org/docs/codegen/python.html#codegen) didn't change the generated code.
+
+| CPU Freq (MHz) | States # | Actuators # | Constraints # | Prediction / Control Horizon | Time / solve (ms) |
+|:--------------:|:--------:|:-----------:|:-------------:|:----------------------------:|:-----------------:|
+|       160      |    12    |      4      |      32       |         10 / 10              |        235        |
+|       240      |    12    |      4      |      32       |         10 / 10              |        156        |
+
+The required microcontroller resources are also significant (~174 kB Total):
+
+![storage](image/esp32_size.png)
+
+## OSQP Generated Code on MacOS
+
+The image below shows the macbook output from building the python generated code into a native executable.
+
+![mac_output](image/mac_output.png)
+
+## Other Resources
+- [Converter MPC to QP Form](https://robotology.github.io/osqp-eigen/md_pages_mpc.html)
+
+OSQP C Interface (instead of python)
+- [Build From Source](https://osqp.org/docs/get_started/sources.html#build-the-binaries)
 
 ```
 rm -dr osqp/build
 cmake -S osqp -B osqp/build
 make -C osqp/build
 ./osqp/build/out/osqp_demo
-```
-
-## Embedded
-`osqp.h` functions that don't work with `#define EMBEDDED`.
-- osqp_setup
-- osqp_cleanup
-- osqp_update_polish
-- osqp_update_polish_refine_iter
-- osqp_update_verbose
-
-`osqp.h` functions that don't work with `#define EMBEDDED 1`.
-- osqp_update_P
-- osqp_update_A
-- osqp_update_P_A
-- osqp_update_rho
-- osqp_update_delta
-
-Therefore, default example doesn't work on embedded. Need to write custom code for `setup` and `cleanup` then make call to `osqp_solve`.
-
-## Troubleshooting ([Issue submitted](https://github.com/osqp/osqp/issues/422))
-### [fix](https://osqp.discourse.group/t/cross-compiling-osqp-for-arm-stm32f405/221/2):  
-
-
-Trying to use `idf.py build` (with or without `set(EMBEDDED 2)`) results in:
-
-```
-CMake Warning (dev) at osqp/lin_sys/direct/qdldl/qdldl_sources/CMakeLists.txt:132 (add_library):
-  ADD_LIBRARY called with SHARED option but the target platform does not
-  support dynamic linking.  Building a STATIC library instead.  This may lead
-  to problems.
-
-ninja: error: build.ninja:17849: multiple rules generate osqp/lin_sys/direct/qdldl/qdldl_sources/out/libqdldl.a [-w dupbuild=err]
 ```
