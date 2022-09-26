@@ -13,6 +13,12 @@ The image below shows the microcontroller's output from building this repository
 
 ![esp_output](image/esp32_output.png)
 
+After measuring performance, it's much worse than I was hoping:
+
+```
+10 iterations took 2 seconds (235 ms per invocation)
+```
+
 ## OSQP Generated Code on MacOS
 
 The image below shows the macbook output from building the python generated code into a native executable.
