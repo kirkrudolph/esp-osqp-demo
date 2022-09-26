@@ -9,17 +9,18 @@ This repository is an example of how to implement OSQP on an embedded controller
 
 ## OSQP Generated Code on Embedded Microcontroller
 
-The image below shows the microcontroller's output from building this repository and flashing it to an ESP32.
+The image below shows the microcontroller's output from building this repository and flashing it to an ESP32. I'd like to test generated code using `FLOAT` instead of `DOUBLE`.
 
 ![esp_output](image/esp32_output.png)
 
-After measuring performance, it's much worse than I was hoping:
+After measuring performance, it's much worse than I was hoping. Averaging over 10 solves (almost no variability because initial state were always the same), the statistics are summarized in the following table:
 
-```
-10 iterations took 2 seconds (235 ms per invocation)
-```
+| CPU Freq (MHz) | # States | # Actuators |  Precision  | Horizon | Time / solve (ms) |
+|:--------------:|:--------:|:-----------:|:-----------:|:-------:|:-----------------:|
+|       160      |    12    |      4      |   Double    |   10    |        235        |
+|       240      |    12    |      4      |   Double    |   10    |        156        |
 
-The required microcontroller resources are also significant (174 kB Total):
+The required microcontroller resources are also significant (~174 kB Total):
 
 ![storage](image/esp32_size.png)
 
