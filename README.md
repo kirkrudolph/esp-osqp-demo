@@ -36,6 +36,9 @@ The image below shows the macbook output from building the python generated code
 
 ![mac_output](image/mac_output.png)
 
+## Next Step: Performance Improvements
+- [Fast MPC](https://web.stanford.edu/~boyd/papers/pdf/fast_mpc.pdf)
+
 ## Other Resources
 - [Converter MPC to QP Form](https://robotology.github.io/osqp-eigen/md_pages_mpc.html)
 
