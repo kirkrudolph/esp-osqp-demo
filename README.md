@@ -28,6 +28,9 @@ After measuring performance, it's much worse than I was hoping. The statistics a
 |      2300      |             12 / 4 / 32              |              2 /  2              |      0.035        |
 |      2300      |             12 / 4 / 32              |              5 /  5              |      0.085        |
 |      2300      |             12 / 4 / 32              |             10 / 10              |      0.180        |
+|      2300      |              9 / 4 / 32              |              2 /  2              |      0.028        |
+|      2300      |              9 / 4 / 32              |              5 /  5              |      0.060        |
+|      2300      |              9 / 4 / 32              |             10 / 10              |      0.125        |
 
 
 The required microcontroller resources are also significant (~174 kB Total):
