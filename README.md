@@ -27,6 +27,16 @@ After measuring performance, it's much worse than I was hoping. The statistics a
 |       160      |         12 / 4         |     10      |     139       |       139       |       842       |      235.0        |
 |       240      |         12 / 4         |     10      |     139       |       139       |       842       |      156.0        |
 
+The required microcontroller resources are also significant (~174 kB Total):
+
+![storage](image/esp32_size.png)
+
+## OSQP Generated Code on MacOS
+
+The image below shows the macbook output from building the python generated code into a native executable.
+
+![mac_output](image/mac_output.png)
+
 | CPU Freq (MHz) | States / Actuators (#) | Horizon (#) | Variables (n) | Constraints (m) | nnz(P) + nnz(A) | Time / solve (ms) |
 |:--------------:|:----------------------:|:-----------:|:-------------:|:---------------:|:---------------:|:-----------------:|
 |      2300      |          9 / 3         |      2      |      33       |        60       |       164       |      -----        |
@@ -41,16 +51,6 @@ After measuring performance, it's much worse than I was hoping. The statistics a
 |      2300      |          9 / 3         |     30      |     369       |       648       |      2152       |      -----        |
 |      2300      |          9 / 4         |     30      |     399       |       678       |      2482       |      -----        |
 |      2300      |         12 / 4         |     30      |     492       |       864       |      3421       |      -----        |
-
-The required microcontroller resources are also significant (~174 kB Total):
-
-![storage](image/esp32_size.png)
-
-## OSQP Generated Code on MacOS
-
-The image below shows the macbook output from building the python generated code into a native executable.
-
-![mac_output](image/mac_output.png)
 
 ## Next Step: Performance Improvements
 - [Fast MPC](https://web.stanford.edu/~boyd/papers/pdf/fast_mpc.pdf)
