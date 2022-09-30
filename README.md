@@ -3,6 +3,7 @@
 
 This repository is an example of how to implement OSQP on an embedded controller for model predictive control (MPC).
 
+
 ## Workflow
 1. MPC problem is designed in a high level language (MATLAB or Python). For example, see [kirkrudolph/osqp-python](https://github.com/kirkrudolph/osqp-python) which uses an example from OSQP to simulate a 12 state model of a quadcopter. The python interface is capable of generating a solver in c code for the specific problem.
 2. Take the generated c code and compile for an embedded microcontroller. This repo uses an ESP32 microcontroller.
@@ -19,13 +20,14 @@ After measuring performance, it's much worse than I was hoping. The statistics a
   - 25 Iterations / solve
   - Almost no variability b/c initial states were always the same.
 - O2 Compiler Optimization
-- Percision [(FLOAT and LONG)](https://osqp.org/docs/codegen/python.html#codegen) didn't change the generated code.
+- Precision [(FLOAT and LONG)](https://osqp.org/docs/codegen/python.html#codegen) didn't change the generated code.
 - Number of Non-zero (nnz)
+- O(T(n+m)^3)
 
 | CPU Freq (MHz) | States / Actuators (#) | Horizon (#) | Variables (n) | Constraints (m) | nnz(P) + nnz(A) | Time / solve (ms) |
 |:--------------:|:----------------------:|:-----------:|:-------------:|:---------------:|:---------------:|:-----------------:|
-|       160      |         12 / 4         |     10      |     139       |       139       |       842       |      235.0        |
-|       240      |         12 / 4         |     10      |     139       |       139       |       842       |      156.0        |
+|       160      |         12 / 4         |     10      |      172      |       304       |       1161      |      235.0        |
+|       240      |         12 / 4         |     10      |      172      |       304       |       1161      |      156.0        |
 
 The required microcontroller resources are also significant (~174 kB Total):
 
