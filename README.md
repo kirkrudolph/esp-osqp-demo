@@ -20,14 +20,16 @@ After measuring performance, it's much worse than I was hoping. The statistics a
   - 25 Iterations / solve
   - Almost no variability b/c initial states were always the same.
 - O2 Compiler Optimization
-- Precision [(FLOAT and LONG)](https://osqp.org/docs/codegen/python.html#codegen) didn't change the generated code.
 - Number of Non-zero (nnz)
 - O(T(n+m)^3)
 
-| CPU Freq (MHz) | States / Actuators (#) | Horizon (#) | Variables (n) | Constraints (m) | nnz(P) + nnz(A) | Time / solve (ms) |
-|:--------------:|:----------------------:|:-----------:|:-------------:|:---------------:|:---------------:|:-----------------:|
-|       160      |         12 / 4         |     10      |      172      |       304       |       1161      |      235.0        |
-|       240      |         12 / 4         |     10      |      172      |       304       |       1161      |      156.0        |
+| CPU Freq (MHz) | Precision  | Optimization | States / Actuators (#) | Horizon (#) | Variables (n) | Constraints (m) | nnz(P) + nnz(A) | Time / solve (ms) | OSQP Size (Byes) |
+|:--------------:|:----------:|:------------:|:----------------------:|:-----------:|:-------------:|:---------------:|:---------------:|:-----------------:|:-----------------:|
+|       160      |   DOUBLE   |  -O2 (Perf)  |         12 / 4         |     10      |      172      |       304       |       1161      |      235.0        |       173,908     |
+|       240      |   DOUBLE   |  -Og (Debug) |         12 / 4         |     10      |      172      |       304       |       1161      |      172.8        |       173,372     |
+|       240      |   DOUBLE   |  -O2 (Perf)  |         12 / 4         |     10      |      172      |       304       |       1161      |      156.7        |       173,908     |
+|       240      |   FLOAT    |  -Og (Debug) |         12 / 4         |     10      |      172      |       304       |       1161      |      29.84        |       112,231     |
+|       240      |   FLOAT    |  -O2 (Perf)  |         12 / 4         |     10      |      172      |       304       |       1161      |      13.26        |       112,567     |
 
 The required microcontroller resources are also significant (~174 kB Total):
 

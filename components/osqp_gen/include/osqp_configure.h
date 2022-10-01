@@ -26,7 +26,7 @@ extern "C" {
 /* #undef CTRLC */
 
 /* DFLOAT */
-/* #undef DFLOAT */
+#define DFLOAT
 
 /* DLONG */
 /* #undef DLONG */

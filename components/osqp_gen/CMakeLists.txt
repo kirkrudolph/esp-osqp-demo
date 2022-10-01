@@ -54,7 +54,7 @@ endif()
 message(STATUS "Profiling is ${PROFILING}")
 
 # Use floats instead of integers
-option (DFLOAT "Use float numbers instead of doubles" OFF)
+option (DFLOAT "Use float numbers instead of doubles" ON)
 message(STATUS "Floats are ${DFLOAT}")
 
 # Use long integers for indexing
