@@ -19,7 +19,6 @@ After measuring performance, it's much worse than I was hoping. The statistics a
 - Average over 10 solves
   - 25 Iterations / solve
   - Almost no variability b/c initial states were always the same.
-- O2 Compiler Optimization
 - Number of Non-zero (nnz)
 - O(T(n+m)^3)
 
@@ -30,6 +29,7 @@ After measuring performance, it's much worse than I was hoping. The statistics a
 |       240      |   DOUBLE   |  -O2 (Perf)  |         12 / 4         |     10      |      172      |       304       |       1161      |      156.7        |       173,908     |
 |       240      |   FLOAT    |  -Og (Debug) |         12 / 4         |     10      |      172      |       304       |       1161      |      29.84        |       112,231     |
 |       240      |   FLOAT    |  -O2 (Perf)  |         12 / 4         |     10      |      172      |       304       |       1161      |      13.26        |       112,567     |
+|       240      |   FLOAT    |  -O2 (Perf)  |          9 / 4         |     10      |      139      |       238       |        842      |      9.699        |        86,147     |
 
 The required microcontroller resources are also significant (~174 kB Total):
 
