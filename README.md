@@ -30,6 +30,7 @@ After measuring performance, it's much worse than I was hoping. The statistics a
 |       240      |   FLOAT    |  -Og (Debug) |         12 / 4         |     10      |      172      |       304       |       1161      |      29.84        |       112,231     |
 |       240      |   FLOAT    |  -O2 (Perf)  |         12 / 4         |     10      |      172      |       304       |       1161      |      13.26        |       112,567     |
 |       240      |   FLOAT    |  -O2 (Perf)  |          9 / 4         |     10      |      139      |       238       |        842      |      9.699        |        86,147     |
+|       240      |   FLOAT    |  -O2 (Perf)  |          2 / 3         |     10      |       52      |        74       |        258      |      2.770        |        22,801     |
 
 The required microcontroller resources are also significant (~174 kB Total):
 
