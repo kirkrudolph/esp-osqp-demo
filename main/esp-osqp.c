@@ -31,7 +31,6 @@ void app_main(void)
         printf("OSQP Solve Error: %d\n",osqp_solve_exit_flag);
         return;
       }
-
     }
     
     uint64_t end = esp_timer_get_time();
@@ -42,11 +41,8 @@ void app_main(void)
     printf("Objective value:       %.4e\n", (&workspace)->info->obj_val);
     printf("Primal residual:       %.4e\n", (&workspace)->info->pri_res);
     printf("Dual residual:         %.4e\n", (&workspace)->info->dua_res);
-    printf("Dual residual:         %.4e\n", (&workspace)->info->dua_res);
-    printf("Variables:             %d\n", (&workspace)->data->n);
     printf("Variables:             %d\n", (&workspace)->data->n);
     printf("Constraints:           %d\n", (&workspace)->data->m);
-
 
     printf("%u iterations took %llu ms (%llu us per invocation)\n",
            MEASUREMENTS, (end - start)/1000, (end - start)/MEASUREMENTS);
