@@ -1,47 +1,55 @@
-# ESP OSQP
+# ESP OSQP Benchmarking
 [OSQP](https://osqp.org/) is an open-source, efficient, and robust numerical optimization package for solving convex quadratic programs. 
 
 This repository is an example of how to implement OSQP on an embedded controller for model predictive control (MPC).
 
+## Generating New MPC Code
+1. MPC problem is designed in a high level language (MATLAB or Python). For multiple MPC examples, see [kirkrudolph/osqp-python](https://github.com/kirkrudolph/osqp-python). The python interface is capable of running a closed-loop simulation with the MPC controller as well as generating a solver in c code for the specific problem.
+2. Replace the `components/Configure`, `components/include`, and `components/src` python generated files with updated MPC problem (don't replace the `CMakeLists.txt` file).
+3. Build the c code ESP-IDF project with `idf.py build` for the embedded microcontroller.
 
-## Workflow
-1. MPC problem is designed in a high level language (MATLAB or Python). For example, see [kirkrudolph/osqp-python](https://github.com/kirkrudolph/osqp-python) which uses an example from OSQP to simulate a 12 state model of a quadcopter. The python interface is capable of generating a solver in c code for the specific problem.
-2. Take the generated c code and compile for an embedded microcontroller. This repo uses an ESP32 microcontroller.
+## OSQP Benchmarking on ESP32 Embedded Microcontroller
 
-## OSQP Generated Code on Embedded Microcontroller
+1. The embedded results were verified to be acurate. The [ESP32 Consol Output](image/esp32_output.png) shows the microcontroller's output from building this repository and flashing it to an ESP32. It was verified to be the same result as the [MacOS Consol Output](image/mac_output.pgn). I've also included an image of the [compiled static library's size requirements](image/esp32_size.png)
 
-The image below shows the microcontroller's output from building this repository and flashing it to an ESP32. I'd like to test generated code using `FLOAT` instead of `DOUBLE`.
+2. Multiple systems were evaluated on an `ESP32` microcontroller. The time / solve was averaged over 10 solves. The optimizer (usually) took 25 iterations / solve. The variables tested and resulting performance statistics are summarized in the following table.
 
-![esp_output](image/esp32_output.png)
+| CPU Freq (MHz) | Precision  | Compiler Optimization | States / Actuators (#) | Horizon (#) | Variables (n) | Constraints (m) | nnz(P) + nnz(A) | Time / solve (ms) | OSQP Size (Byes) |
+|:--------------:|:----------:|:---------------------:|:----------------------:|:-----------:|:-------------:|:---------------:|:---------------:|:-----------------:|:-----------------:|
+|       160      |   DOUBLE   |      -O2 (Perf)       |         12 / 4         |     10      |      172      |       304       |       1161      |      235.0        |       173,908     |
+|       240      |   DOUBLE   |      -Og (Debug)      |         12 / 4         |     10      |      172      |       304       |       1161      |      172.8        |       173,372     |
+|       240      |   DOUBLE   |      -O2 (Perf)       |         12 / 4         |     10      |      172      |       304       |       1161      |      156.7        |       173,908     |
+|       240      |   FLOAT    |      -Og (Debug)      |         12 / 4         |     10      |      172      |       304       |       1161      |      29.84        |       112,231     |
+|       240      |   FLOAT    |      -O2 (Perf)       |         12 / 4         |     10      |      172      |       304       |       1161      |      13.26        |       112,567     |
+|       240      |   FLOAT    |      -O2 (Perf)       |          9 / 4         |     10      |      139      |       238       |        842      |      9.699        |        86,147     |
+|       240      |   FLOAT    |      -O2 (Perf)       |          2 / 3         |     10      |       52      |        74       |        258      |      2.770        |        22,801     |
+|       240      |   FLOAT    |      -O2 (Perf)       |          2 / 3         |     50      |      252      |       354       |       1258      |      17.60        |        72,724     |
 
-After measuring performance, it's much worse than I was hoping. The statistics are summarized in the following table:
+## Discusion
 
-- Average over 10 solves
-  - 25 Iterations / solve
-  - Almost no variability b/c initial states were always the same.
-- Number of Non-zero (nnz)
-- O(T(n+m)^3)
+The order of impactful variables on the computational performance for the `ESP32` microcontroller appears to be:
+1. Using `Single Precision` instead of `Double Precision`
+2. CPU Frequncy
+3. Compiler Optimization
+4. "Size" of the problem (number of states, actuators, horizon, constraints, etc.) appears to fairly linearly increase execution speed.
 
-| CPU Freq (MHz) | Precision  | Optimization | States / Actuators (#) | Horizon (#) | Variables (n) | Constraints (m) | nnz(P) + nnz(A) | Time / solve (ms) | OSQP Size (Byes) |
-|:--------------:|:----------:|:------------:|:----------------------:|:-----------:|:-------------:|:---------------:|:---------------:|:-----------------:|:-----------------:|
-|       160      |   DOUBLE   |  -O2 (Perf)  |         12 / 4         |     10      |      172      |       304       |       1161      |      235.0        |       173,908     |
-|       240      |   DOUBLE   |  -Og (Debug) |         12 / 4         |     10      |      172      |       304       |       1161      |      172.8        |       173,372     |
-|       240      |   DOUBLE   |  -O2 (Perf)  |         12 / 4         |     10      |      172      |       304       |       1161      |      156.7        |       173,908     |
-|       240      |   FLOAT    |  -Og (Debug) |         12 / 4         |     10      |      172      |       304       |       1161      |      29.84        |       112,231     |
-|       240      |   FLOAT    |  -O2 (Perf)  |         12 / 4         |     10      |      172      |       304       |       1161      |      13.26        |       112,567     |
-|       240      |   FLOAT    |  -O2 (Perf)  |          9 / 4         |     10      |      139      |       238       |        842      |      9.699        |        86,147     |
-|       240      |   FLOAT    |  -O2 (Perf)  |          2 / 3         |     10      |       52      |        74       |        258      |      2.770        |        22,801     |
-|       240      |   FLOAT    |  -O2 (Perf)  |          2 / 3         |     50      |      252      |       354       |       1258      |      17.60        |        72,724     |
+Notable results:
+1. In particular, a sub 3ms MPC requiring ~22kB of flash for a small dynamic system is very encouraging. I could see this running at a 5ms to 10ms rate (100Hz to 200Hz) on this microcontroller.
+2. A sub 15ms MPC requiring ~112kB of flash for a higher order system is also impressive. I could see this running at a 20ms to 40ms rate (25 to 50 Hz) on this microcontroller.
+3. The ease of implementing OSQP and updating generated code in the EPS-IDF framework is impressively practical.
 
-The required microcontroller resources are also significant (~174 kB Total):
+## OSQP Benchmarking on MacOS (2.3 GHz Quad-Core Intel Core i7)
 
-![storage](image/esp32_size.png)
+```
+rm -dr osqp/build
+cmake -S osqp -B osqp/build
+make -C osqp/build
+./osqp/build/out/osqp_demo
+```
 
-## OSQP Generated Code on MacOS
+1. [Macbook Consol Output](image/mac_output.png) from building the python generated code into a native executable.
 
-The image below shows the macbook output from building the python generated code into a native executable.
-
-![mac_output](image/mac_output.png)
+2. The variables tested and resulting performance statistics are summarized in the following table.
 
 | CPU Freq (MHz) | States / Actuators (#) | Horizon (#) | Variables (n) | Constraints (m) | nnz(P) + nnz(A) | Time / solve (ms) |
 |:--------------:|:----------------------:|:-----------:|:-------------:|:---------------:|:---------------:|:-----------------:|
@@ -58,18 +66,11 @@ The image below shows the macbook output from building the python generated code
 |      2300      |          9 / 4         |     30      |     399       |       678       |      2482       |      -----        |
 |      2300      |         12 / 4         |     30      |     492       |       864       |      3421       |      -----        |
 
-## Next Step: Performance Improvements
-- [Fast MPC](https://web.stanford.edu/~boyd/papers/pdf/fast_mpc.pdf)
-
 ## Other Resources
-- [Converter MPC to QP Form](https://robotology.github.io/osqp-eigen/md_pages_mpc.html)
+- [Fast MPC](https://web.stanford.edu/~boyd/papers/pdf/fast_mpc.pdf)
+- [Converting MPC to QP Form](https://robotology.github.io/osqp-eigen/md_pages_mpc.html)
+- [OSQP Dev Docs](https://osqp.org/docs/)
 
-OSQP C Interface (instead of python)
-- [Build From Source](https://osqp.org/docs/get_started/sources.html#build-the-binaries)
-
-```
-rm -dr osqp/build
-cmake -S osqp -B osqp/build
-make -C osqp/build
-./osqp/build/out/osqp_demo
-```
+## Misc. Notes
+- NNZ = Number of Non-Zero elements
+- Big O Complexity = O(T(n+m)^3)
