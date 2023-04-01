@@ -10,7 +10,7 @@ This repository is an example of how to implement OSQP on an embedded controller
 
 ## OSQP Benchmarking on ESP32 Embedded Microcontroller
 
-1. The embedded results were verified to be acurate. The [ESP32 Consol Output](image/esp32_output.png) shows the microcontroller's output from building this repository and flashing it to an ESP32. It was verified to be the same result as the [MacOS Consol Output](image/mac_output.pgn). I've also included an image of the [compiled static library's size requirements](image/esp32_size.png)
+1. The embedded results were verified to be acurate. The [ESP32 Consol Output](image/esp32_output.png) shows the microcontroller's output from building this repository and flashing it to an ESP32. It was verified to be the same result as the [MacOS Consol Output](image/mac_output.png). I've also included an image of the [compiled static library's size requirements](image/esp32_size.png)
 
 2. Multiple systems were evaluated on an `ESP32` microcontroller. The time / solve was averaged over 10 solves. The optimizer (usually) took 25 iterations / solve. The variables tested and resulting performance statistics are summarized in the following table.
 
