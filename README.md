@@ -1,7 +1,11 @@
 # ESP OSQP Benchmarking
 [OSQP](https://osqp.org/) is an open-source, efficient, and robust numerical optimization package for solving convex quadratic programs. 
 
-This repository is an example of how to implement OSQP on an embedded controller for model predictive control (MPC).
+This repository is an example of how to implement OSQP on an embedded controller for model predictive control (MPC). Four sets of hardware were benchmarked:
+1. ESP32 (microcontroller)
+2. Raspberry Pi 3B (soc)
+3. Intel i5 (desktop)
+4. Intel i7 (laptop)
 
 ## Generating New MPC Code
 1. MPC problem is designed in a high level language (MATLAB or Python). For multiple MPC examples, see [kirkrudolph/osqp-python](https://github.com/kirkrudolph/osqp-python). The python interface is capable of running a closed-loop simulation with the MPC controller as well as generating a solver in c code for the specific problem.
@@ -38,7 +42,39 @@ Notable results:
 2. A sub 15ms MPC requiring ~112kB of flash for a higher order system is also impressive. I could see this running at a 20ms to 40ms rate (25 to 50 Hz) on this microcontroller.
 3. The ease of implementing OSQP and updating generated code in the EPS-IDF framework is impressively practical.
 
-## OSQP Benchmarking on MacOS (2.3 GHz Quad-Core Intel Core i7)
+## OSQP Benchmarking on Raspberry Pi 3 Model B Rev 1.2 ( BCM2835 rev a02082 ARM Cortex A53 @ 1.2Ghz )
+
+```
+rm -dr osqp_gen/build
+cmake -S osqp_gen -B osqp_gen/build
+make -C osqp_gen/build
+time ./osqp_gen/build/out/example
+```
+
+| CPU Freq (MHz) | States / Actuators (#) | Horizon (#) | Variables (n) | Constraints (m) | nnz(P) + nnz(A) | Time / solve (ms) |
+|:--------------:|:----------------------:|:-----------:|:-------------:|:---------------:|:---------------:|:-----------------:|
+|      1200      |          2 / 3         |     50      |     252       |       354       |      1258       |         2.46      |
+|      1200      |         12 / 4         |     10      |     172       |       304       |      1161       |         3.55      |
+|      1200      |         12 / 4         |     30      |     492       |       864       |      3421       |        14.2       |
+|      1200      |         12 / 4         |   1000      |   16012       |     28024       |    113031       |       523.7       |
+
+## OSQP Benchmarking on Linux ( Intel(R) Core(TM) i5-2400 CPU @ 3.10GHz )
+
+```
+rm -dr osqp_gen/build
+cmake -S osqp_gen -B osqp_gen/build
+make -C osqp_gen/build
+time ./osqp_gen/build/out/example
+```
+
+| CPU Freq (MHz) | States / Actuators (#) | Horizon (#) | Variables (n) | Constraints (m) | nnz(P) + nnz(A) | Time / solve (ms) |
+|:--------------:|:----------------------:|:-----------:|:-------------:|:---------------:|:---------------:|:-----------------:|
+|      3100      |          2 / 3         |     50      |     252       |       354       |      1258       |      0.192        |
+|      3100      |         12 / 4         |     10      |     172       |       304       |      1161       |      0.238        |
+|      3100      |         12 / 4         |     30      |     492       |       864       |      3421       |      0.835        |
+|      3100      |         12 / 4         |   1000      |   16012       |     28024       |    113031       |       33.8        |
+
+## OSQP Benchmarking on MacOS ( Intel(R) Core(TM) i7-4850HQ @ 2.30GHz )
 
 ```
 rm -dr osqp/build
